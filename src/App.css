@@ -1,0 +1,25 @@
+li{
+  list-style: none;
+}
+.weather-sidebar{
+      height: 100vh;
+      position: sticky;
+      top: 0px;
+}
+.weather-desc-card{
+      width: 30%;   
+}
+.card-container{
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+}
+.weather-img{
+      width: 200px;
+      height: 200px;
+}
+.week-desc-card{
+      width: 22%;
+}
