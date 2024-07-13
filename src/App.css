@@ -1,13 +1,17 @@
 li{
   list-style: none;
 }
+
 .weather-sidebar{
       height: 100vh;
       position: sticky;
       top: 0px;
+      /* box-shadow: 0 0  5px rgba(0, 0, 0, 0.55); */
+      background-color: rgba(14, 14, 14, 0.287) !important;
 }
 .weather-desc-card{
-      width: 30%;   
+      width: 30%;
+      background-color: rgba(14, 14, 14, 0.287) !important;
 }
 .card-container{
       display: flex;
@@ -15,11 +19,21 @@ li{
       align-items: center;
       justify-content: center;
       flex-wrap: wrap;
+    
+}
+.card-container p, .card-container span, .weather-description h1, .weather-sidebar h1, .weather-sidebar p, .weather-sidebar h4{
+      color: #ffff !important;
 }
 .weather-img{
       width: 200px;
       height: 200px;
+      
 }
 .week-desc-card{
       width: 22%;
+      background-color: rgba(14, 14, 14, 0.287) !important;
+}
+.container-fluid{
+     background: linear-gradient(rgba(0, 0, 0, 0.433), rgba(0, 0, 0, 0.433)), url('./assets/sunbg.jpg');
+     background-size: cover;
 }
