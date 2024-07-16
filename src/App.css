@@ -1,7 +1,18 @@
 li{
   list-style: none;
 }
-
+select{
+      flex: .09 !important;
+}
+.fs-16{
+      font-size: 16px !important;
+}
+.fs-22{
+      font-size: 60px !important;
+}
+.text-gray{
+      color: rgb(164, 164, 164) !important;
+}
 .weather-sidebar{
       height: 100vh;
       position: sticky;
@@ -22,7 +33,7 @@ li{
     
 }
 .card-container p, .card-container span, .weather-description h1, .weather-sidebar h1, .weather-sidebar p, .weather-sidebar h4{
-      color: #ffff !important;
+      color: #ffff;
 }
 .weather-img{
       width: 200px;
