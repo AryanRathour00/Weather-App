@@ -18,7 +18,7 @@ select{
       position: sticky;
       top: 0px;
       /* box-shadow: 0 0  5px rgba(0, 0, 0, 0.55); */
-      background-color: rgba(14, 14, 14, 0.287) !important;
+      background-color: rgba(96, 96, 96, 0.529) !important;
 }
 .weather-desc-card{
       width: 30%;
@@ -45,6 +45,6 @@ select{
       background-color: rgba(14, 14, 14, 0.287) !important;
 }
 .container-fluid{
-     background: linear-gradient(rgba(0, 0, 0, 0.433), rgba(0, 0, 0, 0.433)), url('./assets/sunbg.jpg');
+     background: linear-gradient(rgba(0, 0, 0, 0.433), rgba(0, 0, 0, 0.433)), url('./assets/rainbg.jpg');
      background-size: cover;
 }

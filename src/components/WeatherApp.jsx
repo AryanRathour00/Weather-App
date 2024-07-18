@@ -1,22 +1,22 @@
-import {React, useState, useEffect} from "react";
+import { React, useState, useEffect } from "react";
 import { FaSearch, FaCloud, FaCloudRain, FaBacon } from "react-icons/fa";
 import { FaVolcano, FaWind, FaSun, FaRegSun } from "react-icons/fa6";
 import { LuWaves } from "react-icons/lu";
 import cloudyImg from "../assets/cloudy.png";
 
 const WeatherApp = () => {
-
-const [location , setLocation] = useState("New Delhi");
-const [temperature, setTemperature] = useState();
-const [feelsLike, setFeelsLike] = useState();
-const [humidity, setHumidity] = useState();
-const [windSpeed, setWindSpeed] = useState();
-const [clouds, setClouds] = useState();
-const [uvIndex, setUVIndex] = useState();
-const [pressure, setPressure] = useState();
-const [city, setCity] = useState();
-const [country, setCountry] = useState();
-const [weatherText, setWeatherText] = useState();
+  const [location, setLocation] = useState("New Delhi");
+  const [temperature, setTemperature] = useState();
+  const [feelsLike, setFeelsLike] = useState();
+  const [humidity, setHumidity] = useState();
+  const [windSpeed, setWindSpeed] = useState();
+  const [clouds, setClouds] = useState();
+  const [uvIndex, setUVIndex] = useState();
+  const [pressure, setPressure] = useState();
+  const [city, setCity] = useState();
+  const [country, setCountry] = useState();
+  const [weatherText, setWeatherText] = useState();
+  const [forecast, setForecast] = useState([]);
 
   const weatherInfo = () => {
     let url = `https://weatherapi-com.p.rapidapi.com/current.json?q=${location}`;
@@ -29,24 +29,42 @@ const [weatherText, setWeatherText] = useState();
     );
     xhr.setRequestHeader("x-rapidapi-host", "weatherapi-com.p.rapidapi.com");
     xhr.onload = function () {
-       let weather = JSON.parse(this.response);
-       setTemperature(weather.current.temp_c);
-       setFeelsLike(weather.current.feelslike_c);
-       setHumidity(weather.current.humidity);
-       setWindSpeed(weather.current.wind_mph);
-       setClouds(weather.current.cloud);
-       setUVIndex(weather.current.uv);
-       setPressure(weather.current.pressure_mb);
+      let weather = JSON.parse(this.response);
+      setTemperature(weather.current.temp_c);
+      setFeelsLike(weather.current.feelslike_c);
+      setHumidity(weather.current.humidity);
+      setWindSpeed(weather.current.wind_mph);
+      setClouds(weather.current.cloud);
+      setUVIndex(weather.current.uv);
+      setPressure(weather.current.pressure_mb);
 
-       setCity(weather.location.name);
-       setCountry(weather.location.country);
-       
-       setWeatherText(weather.current.condition.text)
+      setCity(weather.location.name);
+      setCountry(weather.location.country);
+
+      setWeatherText(weather.current.condition.text);
+    };
+    xhr.send();
+  };
+  const weatherForecast = () => {
+    let url = `https://yahoo-weather5.p.rapidapi.com/weather?location=${location}&format=json&u=f`;
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", url, true);
+    xhr.setRequestHeader(
+      "x-rapidapi-key",
+      "5982c7d206mshc685d1791d1d35ep176e69jsnbc4f839aeb87"
+    );
+    xhr.setRequestHeader("x-rapidapi-host", "yahoo-weather5.p.rapidapi.com");
+    xhr.onload = function () {
+      let forecastData = JSON.parse(this.responseText);
+      forecastData.forecasts && setForecast([ ...forecastData.forecasts ]);
     };
     xhr.send();
   };
 
- useEffect(weatherInfo,[setLocation] );
+  useEffect(() => {
+    weatherInfo();
+    weatherForecast();
+  }, [setLocation]);
 
   return (
     <>
@@ -60,8 +78,8 @@ const [weatherText, setWeatherText] = useState();
                     type="search"
                     className="form-control"
                     value={location}
-                    onChange={(e)=>{
-                      setLocation(e.target.value)
+                    onChange={(e) => {
+                      setLocation(e.target.value);
                     }}
                   />
 
@@ -69,7 +87,7 @@ const [weatherText, setWeatherText] = useState();
                     <option value="2">°C</option>
                     <option value="1">°F</option>
                   </select>
-                  <button className="btn btn-light" onClick={weatherInfo}>
+                  <button className="btn btn-light" onClick={weatherForecast}>
                     <FaSearch />
                   </button>
                 </div>
@@ -93,7 +111,9 @@ const [weatherText, setWeatherText] = useState();
                   <FaCloudRain /> {weatherText}
                 </p>
                 <p>Wednesday, April 3 at 4:57 AM</p>
-                <p>{city}, {country}</p>
+                <p>
+                  {city}, {country}
+                </p>
               </div>
             </div>
           </div>
@@ -193,142 +213,25 @@ const [weatherText, setWeatherText] = useState();
                 <h1 className="fs-4">This Week</h1>
               </div>
               <div className="col-12 px-2 card-container mb-5">
-                <div className="card week-desc-card">
-                  <div className="card-body text-center">
-                    <p>Wednesday, April 3</p>
-                    <img src={cloudyImg} alt="" width={50} />
-                    <p className=" text-gray fs-16 my-2">
-                      heavy intensity rain
-                    </p>
-                    <ul className="d-flex gap-3 mb-0 justify-content-center ps-0">
-                      <li>
-                        <p className="mb-0">8°C</p>
-                      </li>
-                      <li>
-                        <p className="mb-0">8°C</p>
-                      </li>
-                    </ul>
+                {forecast.map((element, index) => (
+                  <div className="card week-desc-card" key={index}>
+                    <div className="card-body text-center">
+                      <p>Wednesday, April 3</p>
+                      <img src={cloudyImg} alt="" width={50} />
+                      <p className=" text-gray fs-16 my-2">
+                          {element.text}
+                      </p>
+                      <ul className="d-flex gap-3 mb-0 justify-content-center ps-0">
+                        <li>
+                          <p className="mb-0">{element.high}°C</p>
+                        </li>
+                        <li>
+                          <p className="mb-0">{element.low}°C</p>
+                        </li>
+                      </ul>
+                    </div>
                   </div>
-                </div>
-                <div className="card week-desc-card">
-                  <div className="card-body text-center">
-                    <p>Wednesday, April 3</p>
-                    <img src={cloudyImg} alt="" width={50} />
-                    <p className=" text-gray fs-16 my-2">
-                      heavy intensity rain
-                    </p>
-                    <ul className="d-flex gap-3 mb-0 justify-content-center ps-0">
-                      <li>
-                        <p className="mb-0">8°C</p>
-                      </li>
-                      <li>
-                        <p className="mb-0">8°C</p>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-                <div className="card week-desc-card">
-                  <div className="card-body text-center">
-                    <p>Wednesday, April 3</p>
-                    <img src={cloudyImg} alt="" width={50} />
-                    <p className=" text-gray fs-16 my-2">
-                      heavy intensity rain
-                    </p>
-                    <ul className="d-flex gap-3 mb-0 justify-content-center ps-0">
-                      <li>
-                        <p className="mb-0">8°C</p>
-                      </li>
-                      <li>
-                        <p className="mb-0">8°C</p>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-                <div className="card week-desc-card">
-                  <div className="card-body text-center">
-                    <p>Wednesday, April 3</p>
-                    <img src={cloudyImg} alt="" width={50} />
-                    <p className=" text-gray fs-16 my-2">
-                      heavy intensity rain
-                    </p>
-                    <ul className="d-flex gap-3 mb-0 justify-content-center ps-0">
-                      <li>
-                        <p className="mb-0">8°C</p>
-                      </li>
-                      <li>
-                        <p className="mb-0">8°C</p>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-                <div className="card week-desc-card">
-                  <div className="card-body text-center">
-                    <p>Wednesday, April 3</p>
-                    <img src={cloudyImg} alt="" width={50} />
-                    <p className=" text-gray fs-16 my-2">
-                      heavy intensity rain
-                    </p>
-                    <ul className="d-flex gap-3 mb-0 justify-content-center ps-0">
-                      <li>
-                        <p className="mb-0">8°C</p>
-                      </li>
-                      <li>
-                        <p className="mb-0">8°C</p>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-                <div className="card week-desc-card">
-                  <div className="card-body text-center">
-                    <p>Wednesday, April 3</p>
-                    <img src={cloudyImg} alt="" width={50} />
-                    <p className=" text-gray fs-16 my-2">
-                      heavy intensity rain
-                    </p>
-                    <ul className="d-flex gap-3 mb-0 justify-content-center ps-0">
-                      <li>
-                        <p className="mb-0">8°C</p>
-                      </li>
-                      <li>
-                        <p className="mb-0">8°C</p>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-                <div className="card week-desc-card">
-                  <div className="card-body text-center">
-                    <p>Wednesday, April 3</p>
-                    <img src={cloudyImg} alt="" width={50} />
-                    <p className=" text-gray fs-16 my-2">
-                      heavy intensity rain
-                    </p>
-                    <ul className="d-flex gap-3 mb-0 justify-content-center ps-0">
-                      <li>
-                        <p className="mb-0">8°C</p>
-                      </li>
-                      <li>
-                        <p className="mb-0">8°C</p>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-                <div className="card week-desc-card">
-                  <div className="card-body text-center">
-                    <p>Wednesday, April 3</p>
-                    <img src={cloudyImg} alt="" width={50} />
-                    <p className=" text-gray fs-16 my-2">
-                      heavy intensity rain
-                    </p>
-                    <ul className="d-flex gap-3 mb-0 justify-content-center ps-0">
-                      <li>
-                        <p className="mb-0">8°C</p>
-                      </li>
-                      <li>
-                        <p className="mb-0">8°C</p>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>
