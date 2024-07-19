@@ -46,26 +46,29 @@ const WeatherApp = () => {
     xhr.send();
   };
   const weatherForecast = () => {
-    let url = `https://yahoo-weather5.p.rapidapi.com/weather?location=${location}&format=json&u=f`;
+    let url = `https://weather-local-forecast.p.rapidapi.com/weather/?time=daily&location=${location}`;
     const xhr = new XMLHttpRequest();
     xhr.open("GET", url, true);
+
     xhr.setRequestHeader(
       "x-rapidapi-key",
       "5982c7d206mshc685d1791d1d35ep176e69jsnbc4f839aeb87"
     );
-    xhr.setRequestHeader("x-rapidapi-host", "yahoo-weather5.p.rapidapi.com");
+    xhr.setRequestHeader(
+      "x-rapidapi-host",
+      "weather-local-forecast.p.rapidapi.com"
+    );
     xhr.onload = function () {
       let forecastData = JSON.parse(this.responseText);
-      forecastData.forecasts && setForecast([ ...forecastData.forecasts ]);
+      forecastData.daily && setForecast([ ...forecastData.daily ]);
     };
     xhr.send();
   };
-
-  useEffect(() => {
-    weatherInfo();
-    weatherForecast();
-  }, [setLocation]);
-
+  // useEffect(() => {
+  //   weatherInfo();
+  //   weatherForecast();
+  // }, [setLocation]);
+  //  console.log(forecast);
   return (
     <>
       <div className="container-fluid">
@@ -87,7 +90,10 @@ const WeatherApp = () => {
                     <option value="2">°C</option>
                     <option value="1">°F</option>
                   </select>
-                  <button className="btn btn-light" onClick={weatherForecast}>
+                  <button className="btn btn-light" onClick={()=>{
+                    weatherForecast();
+                    weatherInfo();
+                  }}>
                     <FaSearch />
                   </button>
                 </div>
@@ -130,7 +136,7 @@ const WeatherApp = () => {
                       <LuWaves />
                     </span>
                     <p className="mb-0 mt-2 fs-4">
-                      {humidity} <span className=" text-gray fs-16">%</span>
+                      {humidity} <span className="text-gray fs-16 fw-italic">%</span>
                     </p>
                   </div>
                 </div>
@@ -141,7 +147,7 @@ const WeatherApp = () => {
                       <FaWind />
                     </span>
                     <p className="mb-0 mt-2 fs-4">
-                      {windSpeed} <span className=" text-gray fs-16">m/h</span>
+                      {windSpeed} <span className="text-gray fs-16 fw-italic">m/h</span>
                     </p>
                   </div>
                 </div>
@@ -182,7 +188,7 @@ const WeatherApp = () => {
                       <FaCloud />
                     </span>
                     <p className="mb-0 mt-2 fs-4">
-                      {clouds} <span className=" text-gray fs-16">%</span>
+                      {clouds} <span className=" text-gray fs-16 fw-italic">%</span>
                     </p>
                   </div>
                 </div>
@@ -193,7 +199,7 @@ const WeatherApp = () => {
                       <FaBacon />
                     </span>
                     <p className="mb-0 mt-2 fs-4">
-                      {uvIndex} <span className=" text-gray fs-16">%</span>
+                      {uvIndex} <span className=" text-gray fs-16 fw-italic">%</span>
                     </p>
                   </div>
                 </div>
@@ -204,7 +210,7 @@ const WeatherApp = () => {
                       <FaVolcano />
                     </span>
                     <p className="mb-0 mt-2 fs-4">
-                      {pressure} <span className=" text-gray fs-16">hPa</span>
+                      {pressure} <span className=" text-gray fs-16 fw-italic">hPa</span>
                     </p>
                   </div>
                 </div>
@@ -213,25 +219,25 @@ const WeatherApp = () => {
                 <h1 className="fs-4">This Week</h1>
               </div>
               <div className="col-12 px-2 card-container mb-5">
-                {forecast.map((element, index) => (
+              {forecast.map((element, index) => (
                   <div className="card week-desc-card" key={index}>
                     <div className="card-body text-center">
                       <p>Wednesday, April 3</p>
                       <img src={cloudyImg} alt="" width={50} />
-                      <p className=" text-gray fs-16 my-2">
-                          {element.text}
-                      </p>
+                      <p className=" text-gray fs-16 my-2">{element.weather[0].description}</p>
                       <ul className="d-flex gap-3 mb-0 justify-content-center ps-0">
                         <li>
-                          <p className="mb-0">{element.high}°C</p>
+                          <p className="mb-0">{Math.floor(element.temp.max - 30)/2}°C</p>
+                          <span className="text-gray fs-16 fw-italic">Max</span>
                         </li>
                         <li>
-                          <p className="mb-0">{element.low}°C</p>
+                          <p className="mb-0">{Math.floor(element.temp.min - 30)/2}°C</p>
+                          <span className="text-gray fs-16 fw-italic">Min</span>
                         </li>
                       </ul>
                     </div>
                   </div>
-                ))}
+                ))} 
               </div>
             </div>
           </div>
