@@ -3,6 +3,8 @@ import { FaSearch, FaCloud, FaCloudRain, FaBacon } from "react-icons/fa";
 import { FaVolcano, FaWind, FaSun, FaRegSun } from "react-icons/fa6";
 import { LuWaves } from "react-icons/lu";
 import cloudyImg from "../assets/cloudy.png";
+import useWeatherInfo from "../hooks/useWeatherInfo";
+import useWeatherForecast from "../hooks/useWeatherForecast";
 
 const WeatherApp = () => {
   const [location, setLocation] = useState("New Delhi");
@@ -16,59 +18,53 @@ const WeatherApp = () => {
   const [city, setCity] = useState();
   const [country, setCountry] = useState();
   const [weatherText, setWeatherText] = useState();
-  const [forecast, setForecast] = useState([]);
+  // const [forecast, setForecast] = useState([]);
 
-  const weatherInfo = () => {
-    let url = `https://weatherapi-com.p.rapidapi.com/current.json?q=${location}`;
-    const xhr = new XMLHttpRequest();
-    xhr.withCredentials = true;
-    xhr.open("GET", url, true);
-    xhr.setRequestHeader(
-      "x-rapidapi-key",
-      "5982c7d206mshc685d1791d1d35ep176e69jsnbc4f839aeb87"
-    );
-    xhr.setRequestHeader("x-rapidapi-host", "weatherapi-com.p.rapidapi.com");
-    xhr.onload = function () {
-      let weather = JSON.parse(this.response);
-      setTemperature(weather.current.temp_c);
-      setFeelsLike(weather.current.feelslike_c);
-      setHumidity(weather.current.humidity);
-      setWindSpeed(weather.current.wind_mph);
-      setClouds(weather.current.cloud);
-      setUVIndex(weather.current.uv);
-      setPressure(weather.current.pressure_mb);
+  // const weatherForecast = () => {
+  //   let url = `https://weather-local-forecast.p.rapidapi.com/weather/?time=daily&location=${location}`;
+  //   const xhr = new XMLHttpRequest();
+  //   xhr.open("GET", url, true);
 
-      setCity(weather.location.name);
-      setCountry(weather.location.country);
+  //   xhr.setRequestHeader(
+  //     "x-rapidapi-key",
+  //     "5982c7d206mshc685d1791d1d35ep176e69jsnbc4f839aeb87"
+  //   );
+  //   xhr.setRequestHeader(
+  //     "x-rapidapi-host",
+  //     "weather-local-forecast.p.rapidapi.com"
+  //   );
+  //   xhr.onload = function () {
+  //     let forecastData = JSON.parse(this.responseText);
+  //     forecastData.daily && setForecast([ ...forecastData.daily ]);
+  //   };
+  //   xhr.send();
+  // };
 
-      setWeatherText(weather.current.condition.text);
-    };
-    xhr.send();
-  };
-  const weatherForecast = () => {
-    let url = `https://weather-local-forecast.p.rapidapi.com/weather/?time=daily&location=${location}`;
-    const xhr = new XMLHttpRequest();
-    xhr.open("GET", url, true);
+  
+  const weatherData = useWeatherInfo(location);
+  const forecast = useWeatherForecast(location);
 
-    xhr.setRequestHeader(
-      "x-rapidapi-key",
-      "5982c7d206mshc685d1791d1d35ep176e69jsnbc4f839aeb87"
-    );
-    xhr.setRequestHeader(
-      "x-rapidapi-host",
-      "weather-local-forecast.p.rapidapi.com"
-    );
-    xhr.onload = function () {
-      let forecastData = JSON.parse(this.responseText);
-      forecastData.daily && setForecast([ ...forecastData.daily ]);
-    };
-    xhr.send();
-  };
+  const weatherInfo=()=>{
+    setTemperature(weatherData.current.temp_c);
+        setFeelsLike(weatherData.current.feelslike_c);
+        setHumidity(weatherData.current.humidity);
+        setWindSpeed(weatherData.current.wind_mph);
+        setClouds(weatherData.current.cloud);
+        setUVIndex(weatherData.current.uv);
+        setPressure(weatherData.current.pressure_mb);
+  
+        setCity(weatherData.location.name);
+        setCountry(weatherData.location.country);
+  
+        setWeatherText(weatherData.current.condition.text);
+  }
+
+
   // useEffect(() => {
   //   weatherInfo();
   //   weatherForecast();
   // }, [setLocation]);
-  //  console.log(forecast);
+//  console.log(forecast);
   return (
     <>
       <div className="container-fluid">
