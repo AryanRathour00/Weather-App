@@ -18,29 +18,7 @@ const WeatherApp = () => {
   const [city, setCity] = useState();
   const [country, setCountry] = useState();
   const [weatherText, setWeatherText] = useState();
-  // const [forecast, setForecast] = useState([]);
 
-  // const weatherForecast = () => {
-  //   let url = `https://weather-local-forecast.p.rapidapi.com/weather/?time=daily&location=${location}`;
-  //   const xhr = new XMLHttpRequest();
-  //   xhr.open("GET", url, true);
-
-  //   xhr.setRequestHeader(
-  //     "x-rapidapi-key",
-  //     "5982c7d206mshc685d1791d1d35ep176e69jsnbc4f839aeb87"
-  //   );
-  //   xhr.setRequestHeader(
-  //     "x-rapidapi-host",
-  //     "weather-local-forecast.p.rapidapi.com"
-  //   );
-  //   xhr.onload = function () {
-  //     let forecastData = JSON.parse(this.responseText);
-  //     forecastData.daily && setForecast([ ...forecastData.daily ]);
-  //   };
-  //   xhr.send();
-  // };
-
-  
   const weatherData = useWeatherInfo(location);
   const forecast = useWeatherForecast(location);
 
@@ -64,7 +42,7 @@ const WeatherApp = () => {
   //   weatherInfo();
   //   weatherForecast();
   // }, [setLocation]);
-//  console.log(forecast);
+
   return (
     <>
       <div className="container-fluid">
